@@ -12,7 +12,7 @@
   }
 </script>
 
-<nav class="bg-gray-800 p-4">
+<nav class="bg-gray-600 p-4">
   <div class="container mx-auto flex items-center justify-between flex-wrap">
     <a href="/" class="text-white text-2xl font-bold">
       로고
