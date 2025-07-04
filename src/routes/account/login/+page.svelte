@@ -13,7 +13,7 @@
   }
 </script>
 
-<main class="p-8 max-w-xl mx-auto">
+<main class="p-7 max-w-xl mx-auto">
   <h1 class="text-3xl font-bold mb-6 text-center">로그인 페이지</h1>
 
   <div class="flex gap-2 mb-4">
