@@ -26,10 +26,10 @@
       bind:value={newTodo}
       placeholder="할 일을 입력하세요"
       class="flex-1 p-2 border rounded"
-      on:keydown={(e) => e.key === 'Enter' && addTodo()}
+      onkeydown={(e) => e.key === 'Enter' && addTodo()}
     />
     <button
-      on:click={addTodo}
+      onclick={addTodo}
       class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded"
     >
       추가
@@ -41,7 +41,7 @@
       <li class="flex items-center justify-between p-2 border rounded bg-gray-50">
         <div
           class="flex items-center gap-2 cursor-pointer"
-          on:click={() => toggle(index)}
+          onclick={() => toggle(index)}
         >
           <input type="checkbox" checked={todo.completed} />
           <span class={todo.completed ? 'line-through text-gray-500' : ''}>
@@ -49,7 +49,7 @@
           </span>
         </div>
         <button
-          on:click={() => remove(index)}
+          onclick={() => remove(index)}
           class="text-red-500 hover:text-red-700 font-bold"
         >
           ✕

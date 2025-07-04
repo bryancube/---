@@ -1,5 +1,5 @@
 <script>
-  import { tasks } from "../store";
+  import { tasks } from "$lib/store";
   export let task = {};
 
   let isChecked;
@@ -34,7 +34,7 @@
       class="form-check-input"
       id="exampleCheck1"
       bind:checked={isChecked}
-      on:change={(e) => taskDone(e)} />
+      onchange={(e) => taskDone(e)} />
     <span class:completed={task.completed}>{task.description}</span>
   </li>
 </main>

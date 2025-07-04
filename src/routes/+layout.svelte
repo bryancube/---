@@ -3,12 +3,71 @@
 	import '../app.css';
 	import { goto } from '$app/navigation';
   import { onMount } from "svelte";
+  import auth from "$lib/authService"
+  import { isAuthenticated, user, user_tasks, tasks } from "$lib/store";
+  import TaskItem from "$lib/components/TaskItem.svelte";
+
+  let auth0Client;
+  let newTask;
+
+  onMount(async () => {
+    auth0Client = await auth.createClient();
+
+    isAuthenticated.set(await auth0Client.isAuthenticated());
+    user.set(await auth0Client.getUser());
+  });
+
+  
   let { children } = $props();
+  async function login() {
+  console.log("auth0Client", auth0Client);
+
+  if (!auth0Client) {
+    console.error("auth0Client가 아직 초기화되지 않았습니다.");
+    return;
+  }
+
+  try {
+    await auth.loginWithPopup(auth0Client);  // ✅ 비동기로 대기
+    console.log("로그인 성공");
+  } catch (err) {
+    console.error("로그인 중 오류 발생:", err);
+  }
+}
+  function addItem() {
+    let newTaskObject = {
+      id: genRandom(),
+      description: newTask,
+      completed: false,
+      user: $user.email
+    };
+
+    console.log(newTaskObject);
+
+    let updatedTasks = [...$tasks, newTaskObject];
+
+    tasks.set(updatedTasks);
+
+    newTask = "";
+  }
+
+  function genRandom(length = 7) {
+    var chars =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var result = "";
+    for (var i = length; i > 0; --i)
+      result += chars[Math.round(Math.random() * (chars.length - 1))];
+    return result;
+  }
   
   let isMenuOpen = $state()
 
   function toggleMenu() {
     isMenuOpen = !isMenuOpen
+  }
+  function go(a) {
+    toggleMenu();
+    goto(a);
   }
 </script>
 
@@ -31,21 +90,36 @@
                 transition-all duration-500 ease-in-out overflow-hidden
                 {isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 lg:max-h-screen lg:opacity-100'}">
       <div class="text-sm lg:flex-grow lg:flex lg:justify-end lg:items-center">
-        <a href="/" class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
+        <button
+         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         onclick={() => go('/')}
+         >
           홈
-        </a>
-        <a href="/about" class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
+        </button>
+        <button
+         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         onclick={() => go('/about')}
+         >
           소개
-        </a>
-        <a href="/services" class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">
+        </button>
+        <button
+         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         onclick={() => go('/services')}
+         >
           서비스
-        </a>
-        <a href="/contact" class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white lg:mr-4">
+        </button>
+        <button
+         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         onclick={() => go('/contact')}
+         >
           문의
-        </a>
-        
-       
-        
+        </button>
+        <button
+         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         onclick={login}
+         >
+          로그인
+        </button>
       </div>
     </div>
   </div>
