@@ -6,34 +6,30 @@
   import auth from "$lib/authService"
   import { isAuthenticated, user, user_tasks, tasks } from "$lib/store";
   import TaskItem from "$lib/components/TaskItem.svelte";
-
-  let auth0Client;
   let newTask;
+  let auth0Client;
 
   onMount(async () => {
     auth0Client = await auth.createClient();
-
     isAuthenticated.set(await auth0Client.isAuthenticated());
     user.set(await auth0Client.getUser());
   });
 
   
   let { children } = $props();
-  async function login() {
-  console.log("auth0Client", auth0Client);
-
-  if (!auth0Client) {
-    console.error("auth0Client가 아직 초기화되지 않았습니다.");
-    return;
+   async function login() {
+    if (!auth0Client) {
+      console.error("Auth0 클라이언트가 아직 초기화되지 않았습니다. 잠시 기다려주세요.");
+      return;
+    }
+    try {
+      console.log("Auth0 loginWithRedirect 호출...");
+      // ✅ auth0Client 인스턴스의 loginWithRedirect 메서드를 직접 호출합니다.
+      await auth0Client.loginWithRedirect();
+    } catch (err) {
+      console.error("로그인 리다이렉트 중 오류 발생:", err);
+    }
   }
-
-  try {
-    await auth.loginWithPopup(auth0Client);  // ✅ 비동기로 대기
-    console.log("로그인 성공");
-  } catch (err) {
-    console.error("로그인 중 오류 발생:", err);
-  }
-}
   function addItem() {
     let newTaskObject = {
       id: genRandom(),
@@ -69,14 +65,19 @@
     toggleMenu();
     goto(a);
   }
+  function logoclick() {
+    isMenuOpen = false;
+    goto('/')
+  }
 </script>
 
 <nav class="bg-gray-600 p-4">
   <div class="container mx-auto flex items-center justify-between flex-wrap">
-    <a href="/" class="text-white text-2xl font-bold">
-      로고
-    </a>
-
+    <button
+      class="text-white text-2xl font-bold cursor-pointer"
+      onclick={logoclick}>
+      (로고)
+    </button>
     <div class="block lg:hidden">
       <button onclick={toggleMenu} class="text-white focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -91,35 +92,39 @@
                 {isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 lg:max-h-screen lg:opacity-100'}">
       <div class="text-sm lg:flex-grow lg:flex lg:justify-end lg:items-center">
         <button
-         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={() => go('/')}
          >
           홈
         </button>
         <button
-         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={() => go('/about')}
          >
           소개
         </button>
         <button
-         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={() => go('/services')}
          >
           서비스
         </button>
         <button
-         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={() => go('/contact')}
          >
           문의
         </button>
+        {#if !user.isAuthenticated}
         <button
-         class="block mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
+         class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={login}
          >
           로그인
         </button>
+        {:else}
+        {user.name}님
+        {/if}
       </div>
     </div>
   </div>

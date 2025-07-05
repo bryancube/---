@@ -1,6 +1,6 @@
 const config = {
-  domain: "dev-g2330eh5q6g772ht.us.auth0.com",
-  clientId: "FU5JOzZBx3Q9ZXTG7MudHt1zDCqrMaTz"
+  domain: "dev-1jtdt5a7qchyocr2.us.auth0.com", // 대시보드에서 직접 복사하여 붙여넣기
+  clientId: "Ahyu2I5AF5SCaAgt7f03zWFiQzXNpPdQ"             // 대시보드에서 직접 복사하여 붙여넣기
 };
 
 export default config;

@@ -30,7 +30,7 @@
     />
     <button
       onclick={addTodo}
-      class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded cursor-pointer"
     >
       추가
     </button>
@@ -50,7 +50,7 @@
         </div>
         <button
           onclick={() => remove(index)}
-          class="text-red-500 hover:text-red-700 font-bold"
+          class="text-red-500 hover:text-red-600 cursor-pointer font-bold"
         >
           ✕
         </button>
