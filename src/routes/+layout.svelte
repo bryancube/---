@@ -17,17 +17,19 @@
 
   
   let { children } = $props();
-   async function login() {
+  async function login() {
+    console.log("auth0Client", auth0Client);
+
     if (!auth0Client) {
-      console.error("Auth0 클라이언트가 아직 초기화되지 않았습니다. 잠시 기다려주세요.");
+      console.error("auth0Client가 아직 초기화되지 않았습니다.");
       return;
     }
+
     try {
-      console.log("Auth0 loginWithRedirect 호출...");
-      // ✅ auth0Client 인스턴스의 loginWithRedirect 메서드를 직접 호출합니다.
-      await auth0Client.loginWithRedirect();
+      await auth.loginWithPopup(auth0Client);  // ✅ 비동기로 대기
+      console.log("로그인 성공");
     } catch (err) {
-      console.error("로그인 리다이렉트 중 오류 발생:", err);
+      console.error("로그인 중 오류 발생:", err);
     }
   }
   function addItem() {
@@ -68,6 +70,10 @@
   function logoclick() {
     isMenuOpen = false;
     goto('/')
+  }
+  function handleLogout() {
+    isMenuOpen = false;
+    auth.logout(auth0Client);
   }
 </script>
 
@@ -115,7 +121,7 @@
          >
           문의
         </button>
-        {#if !user.isAuthenticated}
+        {#if !$user}
         <button
          class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4"
          onclick={login}
@@ -123,7 +129,9 @@
           로그인
         </button>
         {:else}
-        {user.name}님
+        <p class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 mr-4">{$user.name}님! 환영합니다.</p>
+        <button class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-gray-300 hover:text-white mr-4">마이페이지</button>
+        <button onclick={handleLogout} class="block cursor-pointer mt-4 lg:inline-block lg:mt-0 text-red-400/70 hover:text-red-400 mr-4 font-bold">로그아웃</button>
         {/if}
       </div>
     </div>

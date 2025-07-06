@@ -23,7 +23,7 @@ async function createClient() {
     auth0ClientInstance = await createAuth0Client({
       domain: config.domain,
       clientId: config.clientId, // 여기에 client_id가 명확히 전달됨
-      redirect_uri: redirectUri,
+      redirectUri: redirectUri,
     });
     console.log("Auth0 클라이언트 생성 완료:", auth0ClientInstance);
     return auth0ClientInstance;
