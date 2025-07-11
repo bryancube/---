@@ -1,9 +1,16 @@
 <script>
+	import { goto } from "$app/navigation";
+  import { user } from "$lib/store";
+  import auth from "$lib/authService";
   let todos = [];
   let newTodo = '';
 
   function addTodo() {
     if (newTodo.trim() === '') return;
+    if(!$user) {
+      alert("로그인 후 사용해주세요.");
+      return;
+    }
     todos = [...todos, { text: newTodo, completed: false }];
     newTodo = '';
   }

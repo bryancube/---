@@ -3,7 +3,7 @@
 	import '../app.css';
 	import { goto } from '$app/navigation';
   import { onMount } from "svelte";
-  import auth from "$lib/authService"
+  import auth from "$lib/authService";
   import { isAuthenticated, user, user_tasks, tasks } from "$lib/store";
   import TaskItem from "$lib/components/TaskItem.svelte";
   let newTask;

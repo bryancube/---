@@ -1,15 +1,18 @@
 import { createAuth0Client } from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen } from "./store";
-import config from "$lib/auth_config";
+import { config } from "$lib/auth_config";
 let auth0ClientInstance;
 async function createClient() {
   if (auth0ClientInstance) {
     return auth0ClientInstance;
+    console.log($user);
   }
 
+  let monster = {
+    health: 100,
+    defense: 20,
+  }
   console.log("Auth0 클라이언트 생성 시도...");
-  console.log("설정 Domain:", config.domain);
-  console.log("설정 Client ID:", config.clientId); // 이 값이 잘 출력됨
 
   if (!config.domain || !config.clientId) {
     console.error("Auth0 설정 (domain 또는 clientId)이 누락되었습니다. auth_config.js 파일을 확인하세요.");
